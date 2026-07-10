@@ -21,12 +21,12 @@ const Navbar = () => {
     },
   ];
   return (
-    <nav className="flex gap-4 p-4 border-b mb-4 items-center">
+    <nav className="flex gap-4 p-5 border-b mb-4 items-center">
       <Link className="" href={"/"}>
         {/* logo */}
         <FaBug className="align-center" size={16} />
       </Link>
-      <ul className="flex list-none gap-4 p-4">
+      <ul className="flex list-none gap-4 p-5">
         {navItem.map((item) => (
           <li
             className={classnames({
