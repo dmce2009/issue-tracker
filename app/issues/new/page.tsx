@@ -14,6 +14,8 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/ValidationSchema";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 
 type CreateIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -21,6 +23,7 @@ const NewIssuePage = () => {
   const {
     register,
     control,
+
     handleSubmit,
     formState: { errors },
   } = useForm<CreateIssueForm>({
@@ -28,6 +31,8 @@ const NewIssuePage = () => {
   });
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   return (
     <div className="max-w-xl">
       {error && (
@@ -42,6 +47,7 @@ const NewIssuePage = () => {
         className="max-w-xl space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setIsSubmitting(true);
             const response = await axios.post("/api/issues", data);
             router.push("/issues");
           } catch (error) {
@@ -50,6 +56,8 @@ const NewIssuePage = () => {
               "Error has errored",
               //   error.title._errors.toString(),
             );
+          } finally {
+            setIsSubmitting(false);
           }
         })}
       >
@@ -57,11 +65,7 @@ const NewIssuePage = () => {
           placeholder="Title"
           {...register("title")}
         ></TextField.Root>
-        {errors.title && (
-          <Text className="pb-3" color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name={"description"}
           control={control}
@@ -75,7 +79,10 @@ const NewIssuePage = () => {
           </Text>
         )}
 
-        <Button> Submit new issue</Button>
+        <Button disabled={isSubmitting}>
+          {" "}
+          Submit new issue {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
