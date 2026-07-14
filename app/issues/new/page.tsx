@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextField } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -11,24 +11,31 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FaInfoCircle } from "react-icons/fa";
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/ValidationSchema";
+import { z } from "zod";
 
-interface CreateIssueForm {
-  title: string;
-  description: string;
-}
+type CreateIssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
-  const { register, control, handleSubmit } = useForm<CreateIssueForm>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateIssueForm>({
+    resolver: zodResolver(createIssueSchema),
+  });
   const router = useRouter();
-  const [errors, setErrors] = useState("");
+  const [error, setError] = useState("");
   return (
     <div className="max-w-xl">
-      {errors && (
+      {error && (
         <Callout.Root color="red" className="mb-5">
           <Callout.Icon>
             <FaInfoCircle />
           </Callout.Icon>
-          <Callout.Text>{errors}</Callout.Text>
+          <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
       <form
@@ -39,9 +46,9 @@ const NewIssuePage = () => {
             router.push("/issues");
           } catch (error) {
             console.log(error);
-            setErrors(
+            setError(
               "Error has errored",
-              // error.title._errors.toString()
+              //   error.title._errors.toString(),
             );
           }
         })}
@@ -50,6 +57,11 @@ const NewIssuePage = () => {
           placeholder="Title"
           {...register("title")}
         ></TextField.Root>
+        {errors.title && (
+          <Text className="pb-3" color="red" as="p">
+            {errors.title.message}
+          </Text>
+        )}
         <Controller
           name={"description"}
           control={control}
@@ -57,6 +69,11 @@ const NewIssuePage = () => {
             <SimpleMDE value={field.value} onChange={field.onChange} />
           )}
         />
+        {errors.description && (
+          <Text className="pb-3" color="red" as="p">
+            {errors.description.message}
+          </Text>
+        )}
 
         <Button> Submit new issue</Button>
       </form>
