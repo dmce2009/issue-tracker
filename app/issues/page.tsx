@@ -6,7 +6,6 @@ import Link from "../components/Link";
 
 const Issuespage = async () => {
   const issueList = await prisma.issue.findMany();
-  // await delay(2000);
 
   return (
     <>
@@ -54,5 +53,6 @@ const Issuespage = async () => {
     </>
   );
 };
+export const dynamic = "force-dynamic";
 
 export default Issuespage;
