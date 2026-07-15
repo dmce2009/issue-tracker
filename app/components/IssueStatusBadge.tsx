@@ -11,7 +11,7 @@ const badgeMapping: Record<
   CLOSED: { label: "Closed", color: "green" },
 };
 
-const IssueBadge = ({ status }: { status: Status }) => {
+const IssueStatusBadge = ({ status }: { status: Status }) => {
   return (
     <Badge color={badgeMapping[status].color}>
       {badgeMapping[status].label}
@@ -19,4 +19,4 @@ const IssueBadge = ({ status }: { status: Status }) => {
   );
 };
 
-export default IssueBadge;
+export default IssueStatusBadge;
