@@ -1,11 +1,5 @@
-import React from "react";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-
-import prisma from "@/prisma/client";
-import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
-import IssueBadge from "../components/IssueBadge";
+import { Skeleton } from "@/app/components";
+import { Table } from "@radix-ui/themes";
 import IssueActions from "../components/IssueActions";
 
 const loading = () => {

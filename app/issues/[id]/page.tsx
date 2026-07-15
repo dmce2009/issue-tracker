@@ -1,12 +1,15 @@
 import IssueBadge from "@/app/components/IssueBadge";
 import prisma from "@/prisma/client";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
+import delay from "delay";
 import { notFound } from "next/navigation";
 import React from "react";
 import Markdown from "react-markdown";
 
 const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   const resultParams = await params;
+  await delay(3000);
+
   const issueId = Number(resultParams.id);
   if (Number.isNaN(issueId)) notFound();
 
@@ -17,6 +20,7 @@ const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   });
 
   if (!issueFound) notFound();
+
   return (
     <div>
       <Heading as="h2">{issueFound.title}</Heading>
