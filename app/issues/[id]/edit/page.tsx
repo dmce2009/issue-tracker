@@ -1,13 +1,14 @@
-import React from "react";
-import IssueForm from "../../_components/IssueForm";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
+import IssueFormClientWrapper from "../../_components/IssueFormClientWrapper";
+// import IssueForm from "@/app/issues/_components/IssueForm";
 
 interface Props {
   params: {
     id: string;
   };
 }
+
 const IssueEditpage = async ({ params }: Props) => {
   const resultParams = await params;
 
@@ -21,7 +22,7 @@ const IssueEditpage = async ({ params }: Props) => {
   });
 
   if (!issueFound) notFound();
-  return <IssueForm issue={issueFound}></IssueForm>;
+  return <IssueFormClientWrapper issue={issueFound}></IssueFormClientWrapper>;
 };
 
 export default IssueEditpage;

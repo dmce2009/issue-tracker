@@ -7,16 +7,13 @@ import { Issue } from "@prisma/client";
 import { Button, Callout, Text, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaInfoCircle } from "react-icons/fa";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
 type CreateIssueFormData = z.infer<typeof issueSchema>;
 
 interface Props {
