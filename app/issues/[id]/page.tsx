@@ -1,8 +1,9 @@
 import prisma from "@/prisma/client";
-import { Box, Grid } from "@radix-ui/themes";
+import { Box, Flex, Grid } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
+import DeleteIssueButton from "./DeleteIssueButton";
 
 const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   const resultParams = await params;
@@ -19,12 +20,15 @@ const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   if (!issueFound) notFound();
 
   return (
-    <Grid columns={{ initial: "1", md: "2" }} gap={"4"}>
+    <Grid columns={{ initial: "1", sm: "5" }} gap="5">
       <Box>
         <IssueDetails issue={issueFound} />
       </Box>
       <Box>
-        <EditIssueButton issueId={issueFound.id} />
+        <Flex direction="column" gap="4">
+          <EditIssueButton issueId={issueFound.id} />
+          <DeleteIssueButton issueId={issueFound.id} />
+        </Flex>
       </Box>
     </Grid>
   );
