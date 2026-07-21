@@ -6,7 +6,14 @@ import { FaBug } from "react-icons/fa";
 import classnames from "classnames";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import {
+  Avatar,
+  Box,
+  Container,
+  DropdownMenu,
+  Flex,
+  Text,
+} from "@radix-ui/themes";
 
 const Navbar = () => {
   const { status, data: session } = useSession();
@@ -49,12 +56,33 @@ const Navbar = () => {
             </ul>
           </Flex>
           <Box>
+            {status === "authenticated" && (
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Avatar
+                    src={session?.user?.image!}
+                    fallback={"?"}
+                    size={"2"}
+                    radius="full"
+                    className="cursor-pointer"
+                  ></Avatar>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Label>
+                    <Text> {session?.user?.name!}</Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item>
+                    {" "}
+                    <Link href={"/api/auth/signout"}> Logout</Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            )}
+
             {status === "loading" && (
               <Link href={"/api/auth/signin"}>Login</Link>
             )}
-            {status === "authenticated" && (
-              <Link href={"/api/auth/signout"}> Logout</Link>
-            )}
+
             {status === "unauthenticated" && (
               <Link href={"/api/auth/signin"}> Login</Link>
             )}
