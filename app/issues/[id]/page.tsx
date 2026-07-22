@@ -25,14 +25,14 @@ const IssueDetailPage = async ({ params }: { params: { id: string } }) => {
   if (!issueFound) notFound();
 
   return (
-    <Grid columns={{ initial: "1", sm: "5" }} gap="5">
-      <Box>
+    <Grid columns={{ initial: "1", sm: "5", xl: "4" }} gap="5">
+      <Box className="col-span-3">
         <IssueDetails issue={issueFound} />
       </Box>
       <Box>
         {session && (
           <Flex direction="column" gap="4">
-            <AssigneeSelect />
+            <AssigneeSelect issue={issueFound} />
             <EditIssueButton issueId={issueFound.id} />
             <DeleteIssueButton issueId={issueFound.id} />
           </Flex>
