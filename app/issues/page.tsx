@@ -1,20 +1,36 @@
 import prisma from "@/prisma/client";
 import { Table } from "@radix-ui/themes";
-// import Link from "next/link";
+import NextLink from "next/link";
 import { IssueActions, IssueStatusBadge } from "../components";
 import Link from "../components/Link";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
-const Issuespage = async ({
-  searchParams,
-}: {
-  searchParams: { status: Status };
-}) => {
-  const { status } = await searchParams;
+export interface IssueQuery {
+  status: Status;
+  orderBy: keyof Issue;
+  page: string;
+}
+
+interface Props {
+  searchParams: IssueQuery;
+  issues: Issue[];
+}
+
+const Issuespage = async ({ searchParams }: Props) => {
+  const awaitedSearchParams = await searchParams;
+
+  const orderBy = columns
+    .map((column) => column.value)
+    .includes(awaitedSearchParams.orderBy)
+    ? { [awaitedSearchParams.orderBy]: "asc" }
+    : undefined;
+
   const issueList = await prisma.issue.findMany({
     where: {
-      status: status,
+      status: awaitedSearchParams.status,
     },
+    orderBy,
   });
 
   return (
@@ -23,16 +39,26 @@ const Issuespage = async ({
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Id
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created by
-            </Table.ColumnHeaderCell>
+            {columns.map((column) => (
+              <Table.ColumnHeaderCell
+                key={column.value}
+                className={column.className}
+              >
+                <NextLink
+                  href={{
+                    query: {
+                      ...awaitedSearchParams,
+                      orderBy: column.value,
+                    },
+                  }}
+                >
+                  {column.label}
+                </NextLink>
+                {column.value === awaitedSearchParams.orderBy && (
+                  <ArrowUpIcon className="inline" />
+                )}
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
 
@@ -65,4 +91,22 @@ const Issuespage = async ({
 };
 export const dynamic = "force-dynamic";
 
+const columns: {
+  label: string;
+  value: keyof Issue;
+  className?: string;
+}[] = [
+  { label: "ID", value: "id" },
+  { label: "Issue", value: "title" },
+  {
+    label: "Status",
+    value: "status",
+    className: "hidden md:table-cell",
+  },
+  {
+    label: "Created",
+    value: "createdAt",
+    className: "hidden md:table-cell",
+  },
+];
 export default Issuespage;
