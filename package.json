@@ -23,6 +23,7 @@
     "classnames": "^2.3.2",
     "easymde": "^2.21.0",
     "eslint": "9.39.4",
+    "react-hot-toast": "^2.4.1",
     "eslint-config-next": "16.2.10",
     "next": "16.2.10",
     "next-auth": "^4.24.15",
