@@ -57,4 +57,3 @@ const useUsers = () =>
   });
 
 export default AssigneeSelect;
-s;
